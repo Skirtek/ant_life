@@ -46,7 +46,12 @@ public class AntColony implements Colony<Ant> {
 
     @Override
     public void update() {
-        colony.stream().filter(ant -> !(ant instanceof Queen)).forEach(ant -> {
+        colony.forEach(ant -> {
+            if (ant instanceof Queen queen) {
+                queen.updateBadMoodTurns();
+                return;
+            }
+
             boolean isMoveFound = false;
 
             do {
@@ -62,9 +67,13 @@ public class AntColony implements Colony<Ant> {
 
     @Override
     public void generateNewColony(Map<Class<? extends Animal>, Integer> colonyConfiguration) {
+        // We can have only one queen in colony
+        Queen queen = new Queen(new Position(width / 2, height / 2));
+        colony.add(queen);
+
         colonyConfiguration.forEach((antTypeClass, antAmount) -> {
             if (antTypeClass.equals(Drone.class)) {
-                IntStream.range(0, antAmount).forEach(ant -> colony.add(new Drone(generateRandomAntPosition())));
+                IntStream.range(0, antAmount).forEach(ant -> colony.add(new Drone(generateRandomAntPosition(), queen, width, height)));
             } else if (antTypeClass.equals(Worker.class)) {
                 IntStream.range(0, antAmount).forEach(ant -> colony.add(new Worker(generateRandomAntPosition())));
             } else if (antTypeClass.equals(Soldier.class)) {
@@ -73,10 +82,6 @@ public class AntColony implements Colony<Ant> {
                 throw new IllegalArgumentException(String.format("Ant %s is not supported!", antTypeClass.getSimpleName()));
             }
         });
-
-        // We can have only one queen in colony
-        Queen queen = new Queen(new Position(width / 2, height / 2));
-        colony.add(queen);
     }
 
     private Position generateRandomAntPosition() {

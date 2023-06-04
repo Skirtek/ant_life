@@ -5,12 +5,26 @@ import javafx.scene.image.Image;
 import lombok.NonNull;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class Queen extends Ant {
+    private final static int BAD_MOOD_MIN_TURNS = 50;
+    private final static int BAD_MOOD_MAX_TURNS = 100;
+
+    private int badMoodTurnsCounter;
     private static Image image;
 
     public Queen(@NonNull Position position) {
         super(position);
+        badMoodTurnsCounter = new Random().nextInt(BAD_MOOD_MIN_TURNS, BAD_MOOD_MAX_TURNS + 1);
+    }
+
+    public void updateBadMoodTurns() {
+        badMoodTurnsCounter -= 1;
+    }
+
+    public boolean isInMood() {
+        return badMoodTurnsCounter < 1;
     }
 
     @Override
