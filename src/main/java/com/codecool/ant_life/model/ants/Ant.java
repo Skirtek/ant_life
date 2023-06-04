@@ -11,6 +11,4 @@ import lombok.Setter;
 public abstract class Ant implements Animal {
     @Getter @Setter @NonNull
     private Position position;
-
-    public abstract Position getNextPosition();
 }
