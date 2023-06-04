@@ -2,8 +2,11 @@ package com.codecool.ant_life.view;
 
 import com.codecool.ant_life.model.Animal;
 import com.codecool.ant_life.model.Colony;
+import com.codecool.ant_life.model.Position;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import lombok.Getter;
 
 public class ColonyCanvas<T extends Animal> {
@@ -39,14 +42,36 @@ public class ColonyCanvas<T extends Animal> {
     }
 
     private void clearCanvas() {
-        // todo czyścić canvas cały na początku
+        // clearRect(start x, start y, end x, end y)
+        graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     private void drawLines() {
-        // todo narysować linie siatki
+        graphicsContext.setLineWidth(2);
+        graphicsContext.setStroke(Color.BLACK);
+
+        // | | | |
+        for (double i = 0.5; i <= (colony.getWidth() * cellSize) + 1; i += cellSize) {
+            // strokeLine(start x, start y, end x, end y)
+            graphicsContext.strokeLine(i, 0, i, colony.getHeight() * cellSize);
+        }
+
+        // -----
+        for (double i = 0.5; i <= (colony.getHeight() * cellSize) + 1; i += cellSize) {
+            // strokeLine(start x, start y, end x, end y)
+            graphicsContext.strokeLine(0, i, colony.getWidth() * cellSize, i);
+        }
     }
 
     private void drawColony() {
-        // todo narysować kolonie czyli umieścić poszczególnych członków (mrówki 🐜) w poszczególnych komórkach
+         colony.getColony().forEach(ant -> {
+             Image antImage = ant.getImage(cellSize);
+             Position antPosition = ant.getPosition();
+
+             double startXPosition = antPosition.getX() * cellSize;
+             double startYPosition = antPosition.getY() * cellSize;
+
+             graphicsContext.drawImage(antImage, startXPosition, startYPosition);
+         });
     }
 }

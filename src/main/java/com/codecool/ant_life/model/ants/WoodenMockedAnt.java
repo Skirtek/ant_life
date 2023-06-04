@@ -10,7 +10,13 @@ public class WoodenMockedAnt extends Ant {
     }
 
     @Override
-    public Image getImage() {
+    public Image getImage(double size) {
+        return null;
+    }
+
+
+    @Override
+    public Position getNextPosition() {
         return null;
     }
 }
